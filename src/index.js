@@ -61,12 +61,15 @@ const templatePath = `./templates/${options.lang}.js`;
 const componentDir = `${options.dir}/${componentName}`;
 const filePath = `${componentDir}/${componentName}.${fileExtension}`;
 const indexPath = `${componentDir}/index.${indexExtension}`;
+const cssPath = `${componentDir}/${componentName}.module.css`;
 
 // Our index template is super straightforward, so we'll just inline it for now.
 const indexTemplate = prettify(`\
 export * from './${componentName}';
 export { default } from './${componentName}';
 `);
+
+const cssTemplate = prettify(``);
 
 logIntro({
   name: componentName,
@@ -120,6 +123,13 @@ mkDirPromise(componentDir)
   )
   .then((template) => {
     logItemCompletion('Index file built and saved to disk.');
+    return template;
+  })
+  .then((template) =>
+    writeFilePromise(cssPath, prettify(cssTemplate))
+  )
+  .then((template) => {
+    logItemCompletion('css module file built and saved to disk.');
     return template;
   })
   .then((template) => {
